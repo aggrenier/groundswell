@@ -1,0 +1,17 @@
+name = Facebook Autopost Entity
+description = Creates publication entities to add support for Rules, Views, …
+package = Facebook Autopost
+core = 7.x
+
+dependencies[] = fb_autopost
+dependencies[] = entity
+
+files[] = fb_autopost_entity.admin.inc
+files[] = fb_autopost_entity.info.inc
+
+; Information added by drupal.org packaging script on 2012-12-18
+version = "7.x-1.0-alpha2"
+core = "7.x"
+project = "fb_autopost"
+datestamp = "1355853449"
+

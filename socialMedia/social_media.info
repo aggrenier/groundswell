@@ -1,0 +1,7 @@
+name = Social Media
+description = Allows you to post on social media
+package = Groundswell
+core = 7.x
+files[] = social_Media.install
+files[] = social_Media.module
+version = 7.1.3
