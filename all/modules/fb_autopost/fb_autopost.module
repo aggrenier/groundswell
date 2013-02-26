@@ -1,0 +1,157 @@
+<?php
+
+/**
+ * @file
+ * Module implementation file
+ */
+
+/**
+ * Implements hook_help().
+ */
+function fb_autopost_help($path, $arg) {
+  switch ($path) {
+    // Main module help for the block module
+    case 'admin/help#fb_autopost':
+      return '<p>' . t('Facebook Autopost allows you to identify a Facebook user, select one of his/her Facebook pages and set autoposting to it. !link.', array('!link' => l(t('Configure Facebook Autopost'), 'admin/config/services/fbautopost'))) . '</p>';
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function fb_autopost_menu() {
+  $items = array();
+  $items['admin/config/services/fbautopost'] = array(
+    'title' => 'Facebook Autopost',
+    'description' => t('Allows you to set your Facebook credentials and select the pages you want to make available to Drupal to post to.'),
+    'access arguments' => array('administer fb_autopost'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('fb_autopost_global_settings'),
+    'file' => 'fb_autopost.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/config/services/fbautopost/login'] = array(
+    'title' => 'Facebook Autopost Login',
+    'description' => t('Callback that executes right after login in with Facebook.'),
+    'access arguments' => array('administer fb_autopost'),
+    'page callback' => 'fb_autopost_facebook_login',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/services/fbautopost/logout'] = array(
+    'title' => 'Facebook Autopost Logout',
+    'description' => t('Callback that executes right after login in from Facebook.'),
+    'access arguments' => array('administer fb_autopost'),
+    'page callback' => 'fb_autopost_facebook_logout',
+    'type' => MENU_CALLBACK,
+  );
+  $items['fbautopost/authorization/retry'] = array(
+    'title' => 'Post Authorization retry callback',
+    'description' => t('Come back here after authorizing the app for publishing on timeline.'),
+    'access arguments' => array('access content'),
+    'page callback' => 'fb_autopost_authorization_retry',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function fb_autopost_permission() {
+  return array(
+    'administer fb_autopost' =>  array(
+      'title' => t('Administer Facebook Autopost'),
+      'description' => t('Allows setting default Facebook pages to publish to.'),
+    ),
+  );
+}
+
+/**
+ * Helper function to redirect after facebook login
+ */
+function fb_autopost_facebook_login() {
+  // Show error messages from Facebook
+  if (isset($_GET['error'])) {
+    drupal_set_message(t('An error happened while connecting with Facebook. Reason: %reason. Description: %description', array('%reason' => $_GET['error_reason'], '%description' => $_GET['error_description'])), 'error');
+  }
+  else {
+    try {
+      $fb = new FBAutopost();
+      if ($fb_user = $fb->getUser()) {
+        $token = $fb->getAccessToken();
+        variable_set('fb_autopost_token', $token);
+        $user_profile = $fb->api('/me?fields=id');
+        variable_set('fb_autopost_account_id', $user_profile['id']);
+      }
+    } catch (FacebookApiException $e) {
+      // Do nothing with the exception
+      drupal_set_message($e->getMessage(), 'error');
+    }
+  }
+  drupal_goto('admin/config/services/fbautopost');
+}
+
+/**
+ * Helper function to redirect after facebook logout
+ */
+function fb_autopost_facebook_logout() {
+  try {
+    $fb = new FBAutopost();
+    // Invalidate access_token
+    $fb->api('/' . variable_get('fb_autopost_account_id', 'me') . '/permissions', 'DELETE');
+  } catch (FacebookApiException $e) {
+    // Do nothing with the exception
+    drupal_set_message($e->getMessage(), 'error');
+  }
+  // Delete stored variables
+  variable_del('fb_autopost_account_id');
+  variable_del('fb_autopost_page');
+  drupal_goto('admin/config/services/fbautopost');
+}
+
+/**
+ * Helper function to publish on user timeline after failing the first time
+ */
+function fb_autopost_authorization_retry() {
+  try {
+    $fb = new FBAutopost();
+    // Check if there is all necessary data
+    if ($fb->isStoredSession()) {
+      $data = $fb->getStoredSessionPublication();
+      $fb->publish($data['publication'], $data['target']);
+    }    
+  } catch (Exception $e) {
+    watchdog('fb_autopost', $e->getMessage(), array(), WATCHDOG_ERROR);
+    drupal_set_message($e->getMessage(), 'error');
+  }
+  // This method does not throw anything
+  $destination = isset($data['destination']) ? $data['destination'] : '<front>';
+  $fb->removeSessionPublication();
+  drupal_goto($destination);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function fb_autopost_theme($existing, $type, $theme, $path) {
+  return array(
+    'fb_autopost_facebook_profile' => array(
+      'render element' => 'fbprofile',
+      'file' => 'fb_autopost.theme.inc',
+    ),
+    'fb_autopost_facebook_page' => array(
+      'variables' => array('name' => NULL, 'id' => 145634995501895, 'category' => NULL),
+      'file' => 'fb_autopost.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Helper function to load the facebook php sdk library
+ * @param $basename
+ *   Optional basename where to find the library
+ */
+function _load_facebook_sdk($basename = NULL) {
+  $lib_path = libraries_get_path('facebook-php-sdk', $basename);
+  require_once $lib_path . '/src/facebook.php';
+}
