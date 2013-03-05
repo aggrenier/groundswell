@@ -88,21 +88,21 @@ function social_media_menu() {
     'description' => 'Callback that executes right after login in with Facebook.',
     'access arguments' => array('administer fb_autopost'),
     'page callback' => 'fb_autopost_facebook_login',
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/config/socialMedia/logout'] = array(
     'title' => 'Facebook Autopost Logout',
     'description' => 'Callback that executes right after login in from Facebook.',
     'access arguments' => array('administer fb_autopost'),
     'page callback' => 'fb_autopost_facebook_logout',
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
   );
   $items['fbautopost/authorization/retry'] = array(
     'title' => 'Post Authorization retry callback',
     'description' => 'Come back here after authorizing the app for publishing on timeline.',
     'access arguments' => array('access content'),
     'page callback' => 'fb_autopost_authorization_retry',
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/config/socialMedia/session/view'] = array(
     'title' => 'View',
@@ -110,7 +110,7 @@ function social_media_menu() {
     'page arguments' => array(5),
     'access arguments' => array('administer fb_autopost'),
     'page callback' => 'fb_autopost_session',
-    'type' => MENU_LOCAL_ACTION,
+    'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/config/socialMedia/session/clear'] = array(
     'title' => 'Clear',
