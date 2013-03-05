@@ -1,0 +1,19 @@
+name = Social Media Entity
+description = Creates publication entities to add support for Rules, Views, …
+package = Groundswell
+core = 7.x
+
+dependencies[] = social_media
+dependencies[] = entity
+
+files[] = social_media_entity.admin.inc
+files[] = social_media_entity.info.inc
+files[] = class/SocialMediaAutopostEntity.php
+files[] = class/SocialMediaEntityPhoto.php
+
+; Information added by drupal.org packaging script on 2013-02-23
+version = 7.1.3
+core = "7.x"
+
+
+

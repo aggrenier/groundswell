@@ -295,7 +295,7 @@ class SocialMediaFB extends Facebook {
 
     } catch (FacebookApiException $e) {
       // Get the FacebookApiException and throw an ordinary ErrorException
-      throw new ErrorException(t('Facebook SDK threw an error: %error It is possible that your Facebook account cannot access the configured pages, if so please log in again in !url.', array('%error' => $e, '!url' => l(t('Facebook autopost configuration page'), 'admin/config/socialMedia'))), SocialMediaFB::sdk_error, WATCHDOG_ERROR);
+      throw new ErrorException(t('Facebook SDK threw an error: %error It is possible that your Facebook account cannot access the configured pages, if so please log in again in !url.', array('%error' => $e, '!url' => l(t('Facebook autopost configuration page'), 'admin/config/services/fbautopost'))), SocialMediaFB::sdk_error, WATCHDOG_ERROR);
     }
   }
 
@@ -436,7 +436,7 @@ class SocialMediaFB extends Facebook {
     $pages = self::getPagesAccessTokens(variable_get('fb_autopost_account_id', 'me'), variable_get('fb_autopost_token', ''));
     // Check that the selected page is in the available list.
     if (!in_array($page_id, array_keys($pages)) && $page_id != 'me') {
-      throw new ErrorException(t('Insufficient permissions to publish on page with id @id. Please check !config.', array('@id' => $page_id, '!config' => l(t('your configuration'), 'admin/config/socialMedia'))), SocialMediaFB::incorrect_param, WATCHDOG_ERROR);
+      throw new ErrorException(t('Insufficient permissions to publish on page with id @id. Please check !config.', array('@id' => $page_id, '!config' => l(t('your configuration'), 'admin/config/services/fbautopost'))), SocialMediaFB::incorrect_param, WATCHDOG_ERROR);
     }
   }
   

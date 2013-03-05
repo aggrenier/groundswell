@@ -63,7 +63,7 @@ function template_preprocess_social_media_facebook_profile(&$variables) {
     $variables['fbprofile']['#fbprofile_link'] = empty($fbuser_profile['link']) ? 'http://facebook.com/' . $variables['fbprofile']['#fbprofile_id'] : $fbuser_profile['link'];
     $variables['fbprofile']['#fbprofile_picture'] = $fbuser_profile['picture'];
     $variables['fbprofile']['#fbprofile_logout_url'] = $fb->getLogoutUrl(array(
-      'next' => url('admin/config/socialMedia/logout', array('absolute' => TRUE)),
+      'next' => url('admin/config/services/fbautopost/logout', array('absolute' => TRUE)),
     ));
   }
   catch (FacebookApiException $e) {
