@@ -10,6 +10,7 @@ dependencies[] = libraries
 files[] = class/SocialMediaFB.php
 files[] = class/SocialMediaFBPhoto.php
 files[] = class/SocialMediaFBSession.php
-files[] = social_Media.install
-files[] = social_Media.module
+files[] = social_media.install
+files[] = social_media.module
+
 version = 7.1.3

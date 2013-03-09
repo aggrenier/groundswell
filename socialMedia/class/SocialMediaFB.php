@@ -122,10 +122,10 @@ class SocialMediaFB extends Facebook {
 
   function __construct($conf = array()) {
     if (!isset($conf['appId'])) {
-      $conf['appId'] = variable_get('fb_autopost_app_id', '');
+      $conf['appId'] = variable_get('social_media_app_id', '');
     }
     if (!isset($conf['secret'])) {
-      $conf['secret'] = variable_get('fb_autopost_app_secret', '');
+      $conf['secret'] = variable_get('social_media_app_secret', '');
     }
     $this->destination = NULL;
     $this->retry = TRUE;
@@ -189,7 +189,7 @@ class SocialMediaFB extends Facebook {
           $session->storePublication($publication);
           $login_url = $this->getLoginUrl(array(
             'scope' => 'publish_stream',
-            'redirect_uri' => url('fbautopost/authorization/retry', array('absolute' => TRUE)),
+            'redirect_uri' => url('socialmedia/authorization/retry', array('absolute' => TRUE)),
           ));
           // Redirect the user token the login URL that will redirect back to
           // the retry URI.
@@ -238,7 +238,7 @@ class SocialMediaFB extends Facebook {
   protected function publishParameterPrepare(&$publication) {
     $destination = $this->getDestination();
     if ($destination != 'me') {
-      $pages = self::getPagesAccessTokens(variable_get('fb_autopost_account_id', 'me'), variable_get('fb_autopost_token', ''));
+      $pages = self::getPagesAccessTokens(variable_get('social_media_account_id', 'me'), variable_get('social_media_token', ''));
       $publication['params'] += array('access_token' => $pages[$destination]['access_token']);
     }
     else {
@@ -264,7 +264,7 @@ class SocialMediaFB extends Facebook {
    */
   private static function getPagesAccessTokens($account_id, $account_access_token) {
     $pages = array();
-    foreach (variable_get('fb_autopost_pages_access_tokens', array()) as $page_id => $page_access_token) {
+    foreach (variable_get('social_media_pages_access_tokens', array()) as $page_id => $page_access_token) {
       $pages[$page_id] = array(
         'id' => $page_id,
         'access_token' => $page_access_token,
@@ -295,7 +295,7 @@ class SocialMediaFB extends Facebook {
 
     } catch (FacebookApiException $e) {
       // Get the FacebookApiException and throw an ordinary ErrorException
-      throw new ErrorException(t('Facebook SDK threw an error: %error It is possible that your Facebook account cannot access the configured pages, if so please log in again in !url.', array('%error' => $e, '!url' => l(t('Facebook autopost configuration page'), 'admin/config/socialMedia'))), SocialMediaFB::sdk_error, WATCHDOG_ERROR);
+      throw new ErrorException(t('Facebook SDK threw an error: %error It is possible that your Facebook account cannot access the configured pages, if so please log in again in !url.', array('%error' => $e, '!url' => l(t('Social Media configuration page'), 'admin/config/socialMedia'))), SocialMediaFB::sdk_error, WATCHDOG_ERROR);
     }
   }
 
@@ -433,7 +433,7 @@ class SocialMediaFB extends Facebook {
     $page_id = $this->getDestination();
     // Get fresh access tokens for the pages. We use the server side access
     // token and the account ID to retrieve them
-    $pages = self::getPagesAccessTokens(variable_get('fb_autopost_account_id', 'me'), variable_get('fb_autopost_token', ''));
+    $pages = self::getPagesAccessTokens(variable_get('social_media_account_id', 'me'), variable_get('social_media_token', ''));
     // Check that the selected page is in the available list.
     if (!in_array($page_id, array_keys($pages)) && $page_id != 'me') {
       throw new ErrorException(t('Insufficient permissions to publish on page with id @id. Please check !config.', array('@id' => $page_id, '!config' => l(t('your configuration'), 'admin/config/socialMedia'))), SocialMediaFB::incorrect_param, WATCHDOG_ERROR);

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Theme implementation file for Facebook Autopost
+ * Theme implementation file for Social Media
  */
 
 /**

@@ -163,7 +163,7 @@ function social_media_global_settings_submit($form, &$form_state) {
  * 
  * @param array $pages_data
  *   An array containig the Facebook information about the page as returned
- *   from FBAutopost::getPagesData(…).
+ *   from SocialMedia::getPagesData(…).
  * 
  * @return array
  *   Array containing an options friendly array with all writable pages
@@ -182,4 +182,5 @@ function _social_media_get_page_options($pages_data) {
   }
   return $output;
 }
+
 

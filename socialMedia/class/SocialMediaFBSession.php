@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Handles session management for the Facebook Autopost module
+ * Handles session management for the Social Media module
  */
 
 /**
@@ -20,15 +20,15 @@ class SocialMediaFBSession {
    *   The URI the user will be redirected after the publication
    */
   public function storePublication($publication, $destination = NULL) {
-    $_SESSION['fb_autopost_authorization_required'] = array(
+    $_SESSION['social_media_authorization_required'] = array(
       'publication' => $publication,
       'target' => 'me',
     );
     if ($destination) {
-      $_SESSION['fb_autopost_authorization_required']['destination'] = $destination;
+      $_SESSION['social_media_authorization_required']['destination'] = $destination;
     }
     else {
-      $_SESSION['fb_autopost_authorization_required'] += drupal_get_destination();
+      $_SESSION['social_media_authorization_required'] += drupal_get_destination();
     }
   }
 
@@ -37,7 +37,7 @@ class SocialMediaFBSession {
    * publication
    */
   public function isStored() {
-    return isset($_SESSION['fb_autopost_authorization_required']);
+    return isset($_SESSION['social_media_authorization_required']);
   }
 
   /**
@@ -47,7 +47,7 @@ class SocialMediaFBSession {
    * @see SocialMediaFB::storeSessionPublication()
    */
   public function getStoredPublication() {
-    return $_SESSION['fb_autopost_authorization_required'];
+    return $_SESSION['social_media_authorization_required'];
   }
 
   /**
@@ -56,7 +56,7 @@ class SocialMediaFBSession {
    */
   public function removePublication() {
     if (isset($_SESSION)) {
-      unset($_SESSION['fb_autopost_authorization_required']);
+      unset($_SESSION['social_media_authorization_required']);
     }
   }
 }
