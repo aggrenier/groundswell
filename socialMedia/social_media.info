@@ -3,7 +3,7 @@ description = Allows you to post on social media
 package = Groundswell
 core = 7.x
 
-configure = admin/config/socialMedia/
+configure = admin/config/services/fbautopost
 php = 5.3
 
 dependencies[] = libraries
