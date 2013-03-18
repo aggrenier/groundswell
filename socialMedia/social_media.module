@@ -88,21 +88,21 @@ function social_media_menu() {
     'description' => 'Callback that executes right after login in with Facebook.',
     'access arguments' => array('administer social_media'),
     'page callback' => 'social_media_facebook_login',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_CALLBACK,
   );
   $items['admin/config/socialMedia/logout'] = array(
     'title' => 'Social Media Logout',
     'description' => 'Callback that executes right after login in from Facebook.',
     'access arguments' => array('administer social_media'),
     'page callback' => 'social_media_facebook_logout',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_CALLBACK,
   );
   $items['fbautopost/authorization/retry'] = array(
     'title' => 'Post Authorization retry callback',
     'description' => 'Come back here after authorizing the app for publishing on timeline.',
     'access arguments' => array('access content'),
     'page callback' => 'social_media_authorization_retry',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_CALLBACK,
   );
   $items['admin/config/socialMedia/session/view'] = array(
     'title' => 'View',
@@ -110,7 +110,7 @@ function social_media_menu() {
     'page arguments' => array(5),
     'access arguments' => array('administer social_media'),
     'page callback' => 'social_media_session',
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/config/socialMedia/session/clear'] = array(
     'title' => 'Clear',
@@ -171,6 +171,54 @@ function social_media_permission() {
     ),
   );
 }
+
+/**
+ * Helper function to redirect after facebook login.
+ */
+function social_media_facebook_login() {
+  // Show error messages from Facebook.
+  if (isset($_GET['error'])) {
+    drupal_set_message(t('An error happened while connecting with Facebook. Reason: %reason. Description: %description', array('%reason' => $_GET['error_reason'], '%description' => $_GET['error_description'])), 'error');
+  }
+  else {
+    try {
+      $fb = new SocialMediaFB();
+      if ($fb_user = $fb->getUser()) {
+        $token = $fb->getAccessToken();
+        variable_set('social_media_token', $token);
+        $user_profile = $fb->api('/me?fields=id');
+        variable_set('social_media_account_id', $user_profile['id']);
+      }
+    }
+    catch (FacebookApiException $e) {
+      // Do nothing with the exception.
+      drupal_set_message($e->getMessage(), 'error');
+    }
+  }
+  drupal_goto('admin/config/services/fbautopost');
+}
+
+/**
+ * Helper function to redirect after facebook logout.
+ */
+function social_media_facebook_logout() {
+  try {
+    $fb = new SocialMediaFB();
+    // Invalidate access_token
+    $fb->api('/' . variable_get('social_media_account_id', 'me') . '/permissions', 'DELETE');
+  }
+  catch (FacebookApiException $e) {
+    // Do nothing with the exception.
+    drupal_set_message($e->getMessage(), 'error');
+  }
+  drupal_set_message(t('Your account has been logged out from Facebook and the permissions for the app have been removed.'));
+  // Delete stored variables.
+  variable_del('social_media_account_id');
+  variable_del('social_media_page');
+  drupal_goto('admin/config/services/fbautopost');
+}
+
+
 
 /**
  * Implements hook_node_access().
@@ -242,7 +290,7 @@ function _load_facebook_sdk($basename = NULL) {
  *     - clear
  *     - view
  */
-function fb_autopost_session($op = 'view') {
+function social_media_session($op = 'view') {
   $session = new SocialMediaFBSession();
   switch ($op) {
     case 'view':
@@ -260,7 +308,7 @@ function fb_autopost_session($op = 'view') {
 
     case 'clear':
       $session->removePublication();
-      drupal_set_message(t('Session data for Facebook Autopost has been removed.'));
+      drupal_set_message(t('Session data for Social Media Facebook has been removed.'));
       return SocialMediaFBSession();
   }
 }
@@ -268,7 +316,7 @@ function fb_autopost_session($op = 'view') {
 /**
  * Helper function to publish on user timeline after failing the first time.
  */
-function fb_autopost_authorization_retry() {
+function social_media_authorization_retry() {
   try {
     $session = new SocialMediaFBSession();
     // Check if there is all necessary data.
@@ -283,7 +331,7 @@ function fb_autopost_authorization_retry() {
     // session gets regenerated.
     $session = new SocialMediaFBSession();
     $session->removePublication();
-    watchdog('fb_autopost', $e->getMessage(), array(), WATCHDOG_ERROR);
+    watchdog('social_media', $e->getMessage(), array(), WATCHDOG_ERROR);
     drupal_set_message($e->getMessage(), 'error');
   }
   // This method does not throw anything.
