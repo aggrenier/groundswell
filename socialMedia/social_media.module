@@ -97,7 +97,7 @@ function social_media_menu() {
     'page callback' => 'social_media_facebook_logout',
     'type' => MENU_CALLBACK,
   );
-  $items['fbautopost/authorization/retry'] = array(
+  $items['admin/config/authorization/retry'] = array(
     'title' => 'Post Authorization retry callback',
     'description' => 'Come back here after authorizing the app for publishing on timeline.',
     'access arguments' => array('access content'),
@@ -195,7 +195,7 @@ function social_media_facebook_login() {
       drupal_set_message($e->getMessage(), 'error');
     }
   }
-  drupal_goto('admin/config/services/fbautopost');
+  drupal_goto('admin/config/socialmedia');
 }
 
 /**
@@ -215,7 +215,7 @@ function social_media_facebook_logout() {
   // Delete stored variables.
   variable_del('social_media_account_id');
   variable_del('social_media_page');
-  drupal_goto('admin/config/services/fbautopost');
+  drupal_goto('admin/config/socialmedia');
 }
 
 

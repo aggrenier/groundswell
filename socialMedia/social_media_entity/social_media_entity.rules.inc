@@ -170,7 +170,7 @@ function available_facebook_destinations() {
  */
 function rules_action_publish_to_facebook(FacebookPublicationEntity $publication, $pages) {
   try {
-    $fb = facebook_autopost_entity($publication->type);
+    $fb = social_media_entity($publication->type);
     $facebook_returned_id = $fb->setDestination($pages)->publish($publication);
     return array('facebook_publication_id' => $facebook_returned_id['id']);
   }
