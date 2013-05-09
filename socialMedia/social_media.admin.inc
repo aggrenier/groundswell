@@ -130,7 +130,7 @@ function social_media_global_settings() {
           '#title' => t('Login to Facebook'),
           '#href' => $fb->getLoginUrl(array(
             'scope' => 'publish_stream,manage_pages',
-            'redirect_uri' => url('admin/config/services/fbautopost/login', array('absolute' => TRUE)),
+            'redirect_uri' => url('admin/config/services/socialMedia/login', array('absolute' => TRUE)),
           )),
         );
       }

@@ -86,7 +86,7 @@ function _social_media_installed_instances() {
 /**
  * Implements hook_requirements().
  */
-function fb_autopost_requirements($phase) {
+function social_media_requirements($phase) {
   $requirements = array();
   // Ensure translations don't break at install time.
   $t = get_t();
@@ -179,21 +179,21 @@ function social_media_uninstall() {
   // Purge all field infromation
   field_purge_batch(1000);
   
-   variable_del('fb_autopost_app_id');
-  variable_del('fb_autopost_app_secret');
-  variable_del('fb_autopost_account_id');
-  variable_del('fb_autopost_page');
-  variable_del('fb_autopost_pages_access_tokens');
-  variable_del('fb_autopost_token');
+   variable_del('social_media_app_id');
+  variable_del('social_media_app_secret');
+  variable_del('social_media_account_id');
+  variable_del('social_media_page');
+  variable_del('social_media_pages_access_tokens');
+  variable_del('social_media_token');
 }
 
 /**
  * Implements hook_update_N().
  */
-function fb_autopost_update_7100(&$sandbox) {
+function social_media_update_7100(&$sandbox) {
   // Fixes typo in variable name.
-  variable_set('fb_autopost_app_id', variable_get('fb_autopos_app_id', ''));
-  variable_set('fb_autopost_app_secret', variable_get('fb_autopos_app_secret', ''));
-  variable_del('fb_autopos_app_id');
-  variable_del('fb_autopos_app_secret');
+  variable_set('social_media_app_id', variable_get('social_media_app_id', ''));
+  variable_set('social_media_app_secret', variable_get('social_media_app_secret', ''));
+  variable_del('social_media_app_id');
+  variable_del('social_media_app_secret');
 }

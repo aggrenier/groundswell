@@ -72,60 +72,60 @@ function social_media_menu() {
     'file' => 'socialMedia.admin.inc',
   );
 
-  $items['admin/config/services/fbautopost'] = array(
-    'title' => 'Facebook Autopost',
+  $items['admin/config/services/socialMedia'] = array(
+    'title' => 'Social Media',
     'description' => 'Allows you to set your Facebook credentials and select the pages you want to make available to Drupal to post to.',
-    'access arguments' => array('administer fb_autopost'),
+    'access arguments' => array('administer social_media'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('fb_autopost_global_settings'),
-    'file' => 'fb_autopost.admin.inc',
+    'page arguments' => array('social_media_global_settings'),
+    'file' => 'social_media.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/config/services/fbautopost/settings'] = $items['admin/config/services/fbautopost'];
-  $items['admin/config/services/fbautopost/settings']['type'] = MENU_DEFAULT_LOCAL_TASK;
-  $items['admin/config/services/fbautopost/login'] = array(
-    'title' => 'Facebook Autopost Login',
+  $items['admin/config/services/socialMedia/settings'] = $items['admin/config/services/socialMedia'];
+  $items['admin/config/services/socialMedia/settings']['type'] = MENU_DEFAULT_LOCAL_TASK;
+  $items['admin/config/services/socialMedia/login'] = array(
+    'title' => 'Social Media Login',
     'description' => 'Callback that executes right after login in with Facebook.',
-    'access arguments' => array('administer fb_autopost'),
-    'page callback' => 'fb_autopost_facebook_login',
+    'access arguments' => array('administer social_media'),
+    'page callback' => 'social_media_facebook_login',
     'type' => MENU_CALLBACK,
   );
-  $items['admin/config/services/fbautopost/logout'] = array(
-    'title' => 'Facebook Autopost Logout',
+  $items['admin/config/services/socialMedia/logout'] = array(
+    'title' => 'Social Media Logout',
     'description' => 'Callback that executes right after login in from Facebook.',
-    'access arguments' => array('administer fb_autopost'),
-    'page callback' => 'fb_autopost_facebook_logout',
+    'access arguments' => array('administer social_media'),
+    'page callback' => 'social_media_facebook_logout',
     'type' => MENU_CALLBACK,
   );
-  $items['fbautopost/authorization/retry'] = array(
+  $items['socialMedia/authorization/retry'] = array(
     'title' => 'Post Authorization retry callback',
     'description' => 'Come back here after authorizing the app for publishing on timeline.',
     'access arguments' => array('access content'),
-    'page callback' => 'fb_autopost_authorization_retry',
+    'page callback' => 'social_media_authorization_retry',
     'type' => MENU_CALLBACK,
   );
-  $items['admin/config/services/fbautopost/session/view'] = array(
+  $items['admin/config/services/socialMedia/session/view'] = array(
     'title' => 'View',
     'description' => 'View the session data.',
     'page arguments' => array(5),
-    'access arguments' => array('administer fb_autopost'),
-    'page callback' => 'fb_autopost_session',
+    'access arguments' => array('administer social_media'),
+    'page callback' => 'social_media_session',
     'type' => MENU_LOCAL_ACTION,
   );
-  $items['admin/config/services/fbautopost/session/clear'] = array(
+  $items['admin/config/services/socialMedia/session/clear'] = array(
     'title' => 'Clear',
     'description' => 'Clear the session data.',
     'page arguments' => array(5),
-    'access arguments' => array('administer fb_autopost'),
-    'page callback' => 'fb_autopost_session',
+    'access arguments' => array('administer social_media'),
+    'page callback' => 'social_media_session',
     'type' => MENU_LOCAL_ACTION,
   );
-  $items['admin/config/services/fbautopost/session'] = array(
+  $items['admin/config/services/socialMedia/session'] = array(
     'title' => 'Session handling',
     'description' => 'Perform administrative tasks over the session object.',
     'page arguments' => array('view'),
-    'access arguments' => array('administer fb_autopost'),
-    'page callback' => 'fb_autopost_session',
+    'access arguments' => array('administer social_media'),
+    'page callback' => 'social_media_session',
     'type' => MENU_LOCAL_TASK,
   );
 
@@ -166,7 +166,7 @@ function social_media_permission() {
       'description' => t('Delete any social Media posting'),
     ),
     'administer social Media FaceBook Posting' => array(
-      'title' => t('Administer Facebook Autopost'),
+      'title' => t('Administer Social Media'),
       'description' => t('Allows setting default Facebook pages to publish to.'),
     ),
   );

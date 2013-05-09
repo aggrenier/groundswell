@@ -12,7 +12,7 @@ function social_media_entity_rules_action_info() {
   // TODO: Implement access control.
   $actions['publish_to_facebook'] = array(
     'label' => t('Publish to Facebook page'),
-    'group' => t('Facebook Autopost'),
+    'group' => t('Social Media'),
     'parameter' => array(
       'publication' => array(
         'type' => 'facebook_publication',
@@ -53,7 +53,7 @@ function social_media_entity_rules_action_info() {
   );
   $actions['delete_from_facebook'] = array(
     'label' => t('Delete from Facebook'),
-    'group' => t('Facebook Autopost'),
+    'group' => t('Social Media'),
     'parameter' => array(
       'publication_id' => array(
         'type' => 'facebook_publication',
@@ -65,7 +65,7 @@ function social_media_entity_rules_action_info() {
   );
   $actions['edit_in_facebook'] = array(
     'label' => t('Update in Facebook'),
-    'group' => t('Facebook Autopost'),
+    'group' => t('Social Media'),
     'parameter' => array(
       'publication_id' => array(
         'type' => 'facebook_publication',
@@ -111,7 +111,7 @@ function social_media_entity_rules_action_info() {
  */
 function social_media_entity_rules_condition_info() {
   $conditions['social_media_entity_rules_condition_valid_access_token'] = array(
-    'group' => t('Facebook Autopost'),
+    'group' => t('Social Media'),
     'label' => t('Facebook access token presence'),
     'parameter' => array(
       'valid_access_token' => array(
@@ -170,7 +170,7 @@ function available_facebook_destinations() {
  */
 function rules_action_publish_to_facebook(FacebookPublicationEntity $publication, $pages) {
   try {
-    $fb = facebook_autopost_entity($publication->type);
+    $fb = social_media_entity($publication->type);
     $facebook_returned_id = $fb->setDestination($pages)->publish($publication);
     return array('facebook_publication_id' => $facebook_returned_id['id']);
   }
@@ -185,7 +185,7 @@ function rules_action_publish_to_facebook(FacebookPublicationEntity $publication
  */
 function rules_action_publish_to_facebook_timeline(FacebookPublicationEntity $publication, $privacy, $retry) {
   try {
-    $fb = facebook_autopost_entity($publication->type);
+    $fb = social_media_entity($publication->type);
     $facebook_returned_id = $fb->setDestination('me')
         ->setPrivacy($privacy)
         ->setRetry($retry)
@@ -203,7 +203,7 @@ function rules_action_publish_to_facebook_timeline(FacebookPublicationEntity $pu
  */
 function rules_action_delete_from_facebook(FacebookPublicationEntity $publication) {
   try {
-    $fb = facebook_autopost_entity($publication->type);
+    $fb = social_media_entity($publication->type);
     $fb->remoteDelete($publication);
   }
   catch (Exception $e) {
@@ -217,7 +217,7 @@ function rules_action_delete_from_facebook(FacebookPublicationEntity $publicatio
  */
 function rules_action_edit_in_facebook(FacebookPublicationEntity $publication, $privacy, $retry, $destination) {
   try {
-    $fb = facebook_autopost_entity($publication->type);
+    $fb = social_media_entity($publication->type);
     if ($destination == 'me') {
       $fb
         ->setPrivacy($privacy)

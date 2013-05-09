@@ -616,7 +616,7 @@ function social_media_entity_get_properties(FacebookPublicationEntity $publicati
  * @param string $type
  *   Facebook publication type.
  */
-function facebook_autopost_entity($type) {
+function social_media_entity($type) {
   switch ($type) {
     case 'photo':
       return new SocialMediaEntityPhoto();
