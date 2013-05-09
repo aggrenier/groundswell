@@ -8,7 +8,7 @@ dependencies[] = entity
 
 files[] = social_media_entity.admin.inc
 files[] = social_media_entity.info.inc
-files[] = class/SocialMediaAutopostEntity.php
+files[] = class/SocialMediaEntity.php
 files[] = class/SocialMediaEntityPhoto.php
 
 ; Information added by drupal.org packaging script on 2013-02-23

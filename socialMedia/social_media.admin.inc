@@ -87,7 +87,7 @@ function social_media_global_settings() {
     );
 
     try {
-      // Create the FBAutpost object with the stored data.
+      // Create the SocialMedia object with the stored data.
       $fb = new SocialMediaFB();
       if ($fb_user = $fb->getUser()) {
         // If there is a connected account, get all FB pages related to that
